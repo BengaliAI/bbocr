@@ -5,8 +5,11 @@ from __future__ import print_function
 #-------------------------
 import onnxruntime as ort
 import numpy as np
+import os
 import cv2 
 from bnunicodenormalizer import Normalizer
+from pathlib import Path
+from .utils import download
 NORM=Normalizer()
 #-------------------------
 # helpers
@@ -95,15 +98,19 @@ def correctPadding(img,dim,pvalue=255):
 
 class ApsisNet(object):
     def __init__(self,
-                model_weights,
                 providers=['CUDAExecutionProvider','CPUExecutionProvider'],
                 img_height=32,
                 img_width=256,
-                pos_max=40):
+                pos_max=40,
+                bnocr_gid="1YwpcDJmeO5mXlPDj1K0hkUobpwGaq3YA"):
+        
+        
         self.img_height=img_height
         self.img_width =img_width
         self.pos_max   =pos_max
-        self.model     =ort.InferenceSession(model_weights, providers=providers)
+        self.bnocr_gid =bnocr_gid
+        self.model     =ort.InferenceSession(self.get_model_weights(), providers=providers)
+        
         self.vocab     =["blank","!","\"","#","$","%","&","'","(",")","*","+",",","-",".","/",":",";","<","=",">","?","।",
                         "ঁ","ং","ঃ","অ","আ","ই","ঈ","উ","ঊ","ঋ","এ","ঐ","ও","ঔ",
                         "ক","খ","গ","ঘ","ঙ","চ","ছ","জ","ঝ","ঞ","ট","ঠ","ড","ঢ","ণ","ত","থ","দ","ধ","ন",
@@ -111,6 +118,21 @@ class ApsisNet(object):
                         "া","ি","ী","ু","ূ","ৃ","ে","ৈ","ো","ৌ","্",
                         "ৎ","ড়","ঢ়","য়","০","১","২","৩","৪","৫","৬","৭","৮","৯","‍","sep","pad"]
     
+    
+    def get_model_weights(self):
+        home_path = str(Path.home())
+        weight_path = Path(
+            home_path,
+            ".bengali_ai_ocr",
+            "bnocr.onnx"
+        )
+        weight_path = Path(weight_path).resolve()
+        weight_path.parent.mkdir(exist_ok=True, parents=True)
+        weight_path = str(weight_path)
+        if not os.path.isfile(weight_path):
+            download(self.bnocr_gid,weight_path)
+        return weight_path
+        
     def process_batch(self,crops):
         batch_img=[]
         batch_pos=[]
@@ -133,7 +155,7 @@ class ApsisNet(object):
         # batch inp
         return {"image":img,"pos":pos}
     
-    def __call__(self,crops,batch_size=32,normalize_unicode=True):
+    def infer(self,crops,batch_size=32,normalize_unicode=True):
         # adjust batch_size
         if len(crops)<batch_size:
             batch_size=len(crops)

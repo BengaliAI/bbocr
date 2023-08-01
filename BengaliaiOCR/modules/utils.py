@@ -31,3 +31,9 @@ def create_dir(base,ext):
 #---------------------------------------------------------------
 def download(id,save_dir):
     gdown.download(id=id,output=save_dir,quiet=False)
+#---------------------------------------------------------------
+class dotdict(dict):
+    """dot.notation access to dictionary attributes"""
+    __getattr__ = dict.get
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
