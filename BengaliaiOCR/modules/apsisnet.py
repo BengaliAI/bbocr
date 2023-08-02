@@ -176,5 +176,5 @@ class ApsisNet(object):
                 texts.append(label)
         if normalize_unicode:
             texts=[NORM(text)["normalized"] for text in texts]
-            texts=[text for text in texts if text is not None]
+            texts=[text for text in texts if text is not None else ""]
         return texts
