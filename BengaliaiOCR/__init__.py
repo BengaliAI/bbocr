@@ -1,2 +1,2 @@
 from .modules.apsisnet import ApsisNet
-from .modules.detector import Detector
+from .modules.paddledbnet import PaddleDBNet

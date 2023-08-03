@@ -13,6 +13,7 @@ import tarfile
 import requests
 from tqdm import tqdm
 from .utils import LOG_INFO,create_dir
+from .modules import Detector
 #-------------------------
 # helpers from paddle ppocr network: 
 # https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.6/ppocr/utils/network.py
@@ -61,8 +62,7 @@ def maybe_download(model_storage_directory, url):
 #-------------------------
 # main class
 #-------------------------
-
-class Detector(object):
+class PaddleDBNet(Detector):
     def __init__(self,use_gpu=True,
                       device_id=0,
                       max_side_len=960,
@@ -73,6 +73,7 @@ class Detector(object):
                       use_dilation = False,
                       line_model_url='https://paddleocr.bj.bcebos.com/PP-OCRv3/english/en_PP-OCRv3_det_infer.tar',
                       word_model_url='https://paddleocr.bj.bcebos.com/PP-OCRv3/multilingual/Multilingual_PP-OCRv3_det_infer.tar'):
+        super().__init__()
         # set detection options
         self.det_option = fd.RuntimeOption()
         if use_gpu:

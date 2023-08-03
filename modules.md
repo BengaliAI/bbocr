@@ -11,8 +11,8 @@ texts=recognizer.infer(crops,batch_size=32,normalize_unicode=True)
 
 ```python
 # initialization
-from BengaliaiOCR import Detector
-detector=Detector(use_gpu=False)
+from BengaliaiOCR import PaddleDBNet
+detector=PaddleDBNet(use_gpu=False)
 # getting word boxes
 word_boxes=detector.get_word_boxes(img)
 # getting line boxes

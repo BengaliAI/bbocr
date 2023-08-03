@@ -10,6 +10,7 @@ import cv2
 from bnunicodenormalizer import Normalizer
 from pathlib import Path
 from .utils import download
+from .modules import Recognizer
 NORM=Normalizer()
 #-------------------------
 # helpers
@@ -96,7 +97,7 @@ def correctPadding(img,dim,pvalue=255):
 # model class
 #------------------------
 
-class ApsisNet(object):
+class ApsisNet(Recognizer):
     def __init__(self,
                 providers=['CUDAExecutionProvider','CPUExecutionProvider'],
                 img_height=32,
@@ -104,7 +105,7 @@ class ApsisNet(object):
                 pos_max=40,
                 bnocr_gid="1YwpcDJmeO5mXlPDj1K0hkUobpwGaq3YA"):
         
-        
+        super().__init__()
         self.img_height=img_height
         self.img_width =img_width
         self.pos_max   =pos_max
