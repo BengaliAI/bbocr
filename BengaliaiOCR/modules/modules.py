@@ -16,7 +16,7 @@ class Recognizer(metaclass=ABCMeta):
         pass
 
 class Detector(metaclass=ABCMeta):
-    """Recognizer base class
+    """Line and Word detector base class
     """
     def __init__(self):
         pass
@@ -31,4 +31,14 @@ class Detector(metaclass=ABCMeta):
     
     @abstractmethod
     def get_crops(self):
+        pass
+
+class LayoutAnalyzer(metaclass=ABCMeta):
+    """layout analyzer base class
+    """
+    def __init__(self):
+        pass
+    
+    @abstractmethod
+    def get_rois(self):
         pass

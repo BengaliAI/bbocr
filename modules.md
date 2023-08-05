@@ -7,7 +7,7 @@ from BengaliaiOCR import ApsisNet
 recognizer=ApsisNet()
 texts=recognizer.infer(crops,batch_size=32,normalize_unicode=True)
 ```
-## Detector
+## PaddleDBNet
 
 ```python
 # initialization
