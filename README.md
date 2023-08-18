@@ -1,4 +1,4 @@
-# ocr
+# bbOCR
 
 ## TODO
 - [ ] populate isolated standalone modules under **BengaliaiOCR/modules**
