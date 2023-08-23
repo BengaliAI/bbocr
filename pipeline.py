@@ -1,40 +1,40 @@
-import line_profiler; profile = line_profiler.LineProfiler()
+# %%
+# !nvcc --version
+# import torch, torchvision,numpy
+# print(torch.__version__, torch.cuda.is_available(), numpy.__version__) #1.13.1 True 1.23.5
 
-ONNX_PATH = "bnocr.onnx"
-# ONNX_PATH = "./quantized_bnocr.onnx"
-# ONNX_PATH = "/mnt/hdd/jawaril/src/distillation/dla/weights/bnocr.onnx"
-model_weight ='best.pt'
-uname = 'farig_sadeque'
+# %%
+import layoutparser as lp
+import cv2
+import yaml
+import io
+import os
+from ultralytics import YOLO
+from pathlib import Path
 
-ONNX_PATH = "../bnocr.onnx"
-# ONNX_PATH = "./quantized_bnocr.onnx"
-# ONNX_PATH = "/mnt/hdd/jawaril/src/distillation/dla/weights/bnocr.onnx"
-model_weight ='../best.pt'
-uname = 'shayekh'
+# %%
+# from paddleocr import PaddleOCR
+import numpy as np
+import cv2
+import json
+import matplotlib.pyplot as plt
+import pandas as pd
+from tqdm.auto import tqdm
+from glob import glob
+from pprint import pprint
+import os
+import time
+
+
+import fastdeploy as fd
+import cv2
+import os
+from multiprocessing import Pool
+
+import pickle
 
 # LOG_ALL = True
 LOG_ALL = False
-
-base_path = '/mnt/hdd/jawaril/full_pipeline/Evaluation_Metric'
-# base_path = r'D:\BADLAD\__RECONSTRUCTION\Evaluation_Metric'
-base_path = '/media/shayekh/Data/_learn_/ocr23/full_pipeline/Evaluation_Metric'
-
-
-# image_dir = r'data/image'
-# image_dir = '/mnt/hdd/jawaril/dataset/icmla23/eval_imgs_doctr_ill'
-# image_dir = '/mnt/hdd/jawaril/dataset/icmla23/eval_imgs_paperedge_local_it1_doctr_ill'
-# image_dir = '/mnt/hdd/jawaril/full_pipeline/Evaluation_Metric/data/paperedge_it1_imgs'
-
-
-# preproc_suffix = '_illum'
-preproc_suffix = '_illum_geom1'
-image_dir = '/media/shayekh/Data/_learn_/ocr23/eval_imgs_paperedge_local_it1_doctr_ill'
-
-preproc_suffix = '_geom'
-image_dir = '/media/shayekh/Data/_learn_/ocr23/eval_imgs_paperedge_local_it1'
-
-preproc_suffix = '_illum'
-image_dir = '/media/shayekh/Data/_learn_/ocr23/eval_imgs_paperedge_doctr_ill'
 
 
 roi_directory = r'data/roi'
@@ -68,42 +68,6 @@ standalone_all_pred_word_texts_suffix = '_standalone_all_pred_word_texts.pkl'
 
 
 
-
-# %%
-# !nvcc --version
-# import torch, torchvision,numpy
-# print(torch.__version__, torch.cuda.is_available(), numpy.__version__) #1.13.1 True 1.23.5
-
-# %%
-import layoutparser as lp
-import cv2
-import yaml
-import io
-import os
-from ultralytics import YOLO
-from pathlib import Path
-
-# %%
-# from paddleocr import PaddleOCR
-import numpy as np
-import cv2
-import json
-import matplotlib.pyplot as plt
-import pandas as pd
-from tqdm.auto import tqdm
-from glob import glob
-from pprint import pprint
-import os
-import time
-# from google.colab.patches import cv2_imshow
-tqdm.pandas()
-
-import fastdeploy as fd
-import cv2
-import os
-from multiprocessing import Pool
-
-import pickle
 
 
 def pickle_dump(object, file_name):
