@@ -1138,35 +1138,23 @@ def run_yolo_model(model_weight, image_path, file_name, img_src_save_directory, 
     line_counts_all_boxes = [0]
     line_coordinates_gc_all_boxes = []
     counter = 0
-    # TODO: info dict inplace update
+
     for info_dict, result_line, cropped_text_region, padding_amount_box, global_coordinates_box in zip(region_of_interests, result_line_all, cropped_text_region_all_boxes, padding_amount_all_boxes, global_coordinates_all_box):
         line_counter = 0
-        # result_line = line_segmentation(cropped_text_region)
-        # import pdb; pdb.set_trace()
-        # global pool
-        # result_line = pool.map(process_predict, [cropped_text_region])
-        # print("result_line", result_line)
 
         line_coordinates, line_coordinates_gc = get_coordinates_from_segmentation_fd(result_line, padding_amount_box, global_coordinates_box)
-        # line_coordinates_gc_all_boxes.append(line_coordinates_gc) # TODO: remove as only for viz
-        # line_coordinates_gc: x_min, y_min, x_max, y_max
-        # print("line_coordinates", line_coordinates)
 
         '''sort line coordinates based on y_min'''
         # Line ordering
         sorted_line_coordinates = sorted(line_coordinates, key = lambda x: x[1])
-        sorted_line_coordinates_gc = sorted(line_coordinates_gc, key = lambda x: x[1]) # TODO: check?
-        # print("sorted_line_coordinates", sorted_line_coordinates)
-        # line_coordinates_gc_all_boxes.append(sorted_line_coordinates_gc) # TODO: remove as only for viz
+        sorted_line_coordinates_gc = sorted(line_coordinates_gc, key = lambda x: x[1]) 
 
         '''uncomment to enable vertical dilation for line segments'''
         sorted_line_coordinates, sorted_vertical_dilation_all_lines = line_vertical_dilation(sorted_line_coordinates, cropped_text_region.shape[0], rate=0.1)
 
         sorted_line_coordinates, sorted_horizontal_dilation_all_lines = line_horizontal_dilation(sorted_line_coordinates, cropped_text_region.shape[1], rate=0.3)
 
-        # print("sorted_line_coordinates", sorted_line_coordinates)
 
-        # print("sorted_line_coordinates after dilation", sorted_line_coordinates)
         for idx, dil in enumerate(sorted_vertical_dilation_all_lines):
             sorted_line_coordinates_gc[idx][1] -= dil[0]
             sorted_line_coordinates_gc[idx][3] += dil[1]
@@ -1175,9 +1163,8 @@ def run_yolo_model(model_weight, image_path, file_name, img_src_save_directory, 
             sorted_line_coordinates_gc[idx][0] -= dil[0]
             sorted_line_coordinates_gc[idx][2] += dil[1]
         
-        # print("sorted_line_coordinates_gc", sorted_line_coordinates_gc)
 
-        line_coordinates_gc_all_boxes.append(sorted_line_coordinates_gc) # TODO: remove as only for viz
+        line_coordinates_gc_all_boxes.append(sorted_line_coordinates_gc)
 
         text = []
 
@@ -1187,13 +1174,9 @@ def run_yolo_model(model_weight, image_path, file_name, img_src_save_directory, 
         
         
         for i in range(len(sorted_line_coordinates)):
-            # cropped_text_region is still wrt paddeded DLA box
-            # sorted_line_coordinates is dilated wrt cropped_text_region
+
             cropped_line_region = cropped_text_region[sorted_line_coordinates[i][1]:sorted_line_coordinates[i][3],
                                                         sorted_line_coordinates[i][0]:sorted_line_coordinates[i][2]]
-            
-            # if i==0 or i==len(sorted_line_coordinates)-1:
-            #     cropped_line_region = top_bottom_padding(cropped_line_region, ratio=1.2)
 
 
             if len(sorted_line_coordinates) == 1:
@@ -1206,7 +1189,6 @@ def run_yolo_model(model_weight, image_path, file_name, img_src_save_directory, 
                 if LOG_ALL:
                     cv2.imwrite(os.path.join(cropped_line_region_save_path, f"{counter}.jpg"), cropped_line_region)
                 counter += 1
-            # print("cropped_line_region", cropped_line_region)
 
 
             if len(cropped_line_region) != 0:
@@ -1214,8 +1196,6 @@ def run_yolo_model(model_weight, image_path, file_name, img_src_save_directory, 
                 
                 line_counter += 1
                 
-                
-                # result_word = word_segmentation(cropped_line_region)
         line_counts_all_boxes.append(line_counts_all_boxes[-1] + line_counter)
     
     
@@ -1226,13 +1206,11 @@ def run_yolo_model(model_weight, image_path, file_name, img_src_save_directory, 
     print('Num word regions', len(cropped_line_region_allboxes_all_lines))
     start = time.time()
     result_words_allbox_alllines = pool2.map(word_predict, cropped_line_region_allboxes_all_lines)
-    # result_words_allbox_alllines = pool2.map(word_batch_predict, [cropped_line_region_allboxes_all_lines])[0]
-    # print(result_words_allbox_alllines)
+
     dur = time.time() - start
     runtime['word'] = dur
     print("Word parallel inference time", dur)
 
-    # print('result_words_allbox_alllines', result_words_allbox_alllines, len(result_words_allbox_alllines))
     
     __start = time.time()
     num_of_lines = len(result_words_allbox_alllines)
@@ -1240,7 +1218,6 @@ def run_yolo_model(model_weight, image_path, file_name, img_src_save_directory, 
     for i in range(num_of_lines):
         num_of_words_per_line.append(len(result_words_allbox_alllines[i]))
 
-    # print('num_of_words_per_line', num_of_words_per_line)
 
     word_gc_all_box_all_lines = []
     
@@ -1313,9 +1290,7 @@ def run_yolo_model(model_weight, image_path, file_name, img_src_save_directory, 
     print('length of words', len(texts))
     print("Recognition time", dur)
     runtime['rec'] = dur
-
-    
-    
+  
     
     if standalone_OCR_required:
         
@@ -1460,10 +1435,6 @@ def reconstruct(directory, img_src_save_dir, standalone_OCR_required):
             if file_name.endswith('.csv'): continue
         # print(file_name)
         if os.path.isfile(os.path.join(directory, file_name)):
-        # if os.path.isfile(os.path.join(directory, file_name))  \
-            # and file_name in ['d3f09723-2b93-4c28-8166-c95daa11de79.png']:
-            # and file_name in ["0b0e7f70-1225-4ed5-b5e2-9cc5fb9795a6.png"]:
-            # , '0aa9adfb-378e-457a-8e29-f9e75f9611ad.png']:
 
             file_path = directory + "/" + file_name
             im_names.append(file_name)
@@ -1598,13 +1569,11 @@ if __name__ == '__main__':
         results = pool1.map(line_predict, imgs_list[:process_num1])
         results = pool2.map(word_predict, imgs_list[:process_num2])
         results = pool3.map(recognize_word, [[imgs_list[0]]])[0]
-    
-    # exit()
 
-    # os.makedirs(img_src_save_dir, exist_ok=True, parent=True)
+
+
         Path(img_src_save_dir).mkdir(parents=True, exist_ok=True)
-        # os.makedirs(cropped_line_region_save_path, exist_ok=True)
-        # os.makedirs(cropped_word_regions_save_path, exist_ok=True)
+
         reconstruct(image_dir, img_src_save_dir, 
                     # standalone_OCR_required= True
                     standalone_OCR_required= False
