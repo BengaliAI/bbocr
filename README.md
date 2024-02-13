@@ -21,20 +21,7 @@ pip install paddleocr ultralytics layoutparser bnunicodenormalizer onnxruntime-g
 ```
 
 
-## Citation
 
-You can cite bbOCR as:
-
-```
-@misc{zulkarnain2023bbocr,
-      title={bbOCR: An Open-source Multi-domain OCR Pipeline for Bengali Documents}, 
-      author={Imam Mohammad Zulkarnain and Shayekh Bin Islam and Md. Zami Al Zunaed Farabe and Md. Mehedi Hasan Shawon and Jawaril Munshad Abedin and Beig Rajibul Hasan and Marsia Haque and Istiak Shihab and Syed Mobassir and MD. Nazmuddoha Ansary and Asif Sushmit and Farig Sadeque},
-      year={2023},
-      eprint={2308.10647},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
-}
-```
 
 
 
