@@ -1,4 +1,4 @@
-**Deprecated repo, click here for the recent one [https://github.com/BengaliAI/chitrolipi]**
+# **Deprecated repo, click here for the recent one [https://github.com/BengaliAI/chitrolipi]**
 <!-- # ocr
 
 ## TODO
